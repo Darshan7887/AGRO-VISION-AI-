@@ -1,0 +1,313 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><html>
+ <head>
+  <title>
+   AI-Based Agriculture App
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        .sidebar-open {
+            transform: translateX(0);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+        }
+        .overlay-open {
+            display: block;
+        }
+        .hidden {
+            display: none;
+        }
+  </style>
+ </head>
+ <body class="font-roboto bg-gray-100">
+  <header class="bg-green-600 text-white p-4 flex justify-between items-center">
+   <div class="text-2xl font-bold">
+    AgroVision AI
+   </div>
+   <button class="text-white focus:outline-none" id="menuButton">
+    <i class="fas fa-bars">
+    </i>
+   </button>
+  </header>
+  <div class="fixed inset-y-0 left-0 bg-white w-64 shadow-lg sidebar z-50" id="sidebar">
+   <div class="p-4">
+    <h2 class="text-xl font-bold mb-4">
+     Menu
+    </h2>
+    <nav>
+     <ul class="space-y-4">
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="home" href="#">
+        Home
+       </a>
+      </li>
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="dashboard" href="#">
+        Dashboard
+       </a>
+      </li>
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="soil-detection" href="#">
+        Soil Detection
+       </a>
+      </li>
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="crop-detection" href="#">
+        Crop Detection
+       </a>
+      </li>
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="weather-detection" href="#">
+        Weather Detection
+       </a>
+      </li>
+      <li>
+       <a class="text-gray-700 hover:underline" data-target="login" href="#">
+        Login
+       </a>
+      </li>
+     </ul>
+    </nav>
+   </div>
+  </div>
+  <div class="overlay" id="overlay">
+  </div>
+  <main class="p-4 transition-all duration-300">
+   <section class="mb-8" id="home">
+    <h2 class="text-xl font-bold mb-4">
+     Welcome to AgroVision AI
+    </h2>
+    <div class="bg-white p-6 rounded shadow-md">
+     <h3 class="text-lg font-bold mb-2">
+      How It Works
+     </h3>
+     <p>
+      AgroVision AI leverages advanced AI technology to help farmers optimize their agricultural practices. Our app provides the following features:
+     </p>
+     <ul class="list-disc pl-5 mb-4">
+      <li>
+       Soil Detection: Upload soil images to get detailed analysis and recommendations.
+      </li>
+      <li>
+       Crop Detection: Upload crop images to monitor crop health and get actionable insights.
+      </li>
+      <li>
+       Weather Detection: Enter your location to get real-time weather updates and forecasts.
+      </li>
+     </ul>
+     <img alt="Illustration of AI-based agriculture solutions" class="w-full rounded mb-4" height="400" src="https://storage.googleapis.com/a1aa/image/dH30BDx1YNOoipQBm3vj3NcSPFMaFwLL5Zq7xb9VEVc.jpg" width="600"/>
+     <p>
+      Our goal is to empower farmers with the tools they need to make informed decisions and improve their crop yields. Join us today and take your farming to the next level!
+     </p>
+    </div>
+   </section>
+   <section class="mb-8 hidden" id="login">
+    <h2 class="text-xl font-bold mb-4">
+     Login / Sign Up
+    </h2>
+    <form class="bg-white p-6 rounded shadow-md" id="loginForm">
+     <div class="mb-4">
+      <label class="block text-gray-700" for="email">
+       Email:
+      </label>
+      <input class="w-full p-2 border border-gray-300 rounded" id="email" placeholder="Enter your email" type="email"/>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-700" for="phone">
+       Mobile No:
+      </label>
+      <input class="w-full p-2 border border-gray-300 rounded" id="phone" placeholder="Enter your mobile number" type="tel"/>
+     </div>
+     <button class="bg-green-600 text-white px-4 py-2 rounded" id="sendOtpButton" type="button">
+      Send OTP
+     </button>
+     <div class="mt-4 hidden" id="otpSection">
+      <label class="block text-gray-700" for="otp">
+       OTP:
+      </label>
+      <input class="w-full p-2 border border-gray-300 rounded" id="otp" placeholder="Enter OTP" type="text"/>
+      <button class="bg-green-600 text-white px-4 py-2 rounded mt-2" type="submit">
+       Verify OTP
+      </button>
+     </div>
+    </form>
+   </section>
+   <section class="mb-8 hidden" id="dashboard">
+    <h2 class="text-xl font-bold mb-4">
+     Dashboard
+    </h2>
+    <div class="bg-white p-6 rounded shadow-md">
+     <h3 class="text-lg font-bold mb-2">
+      Profile Details
+     </h3>
+     <p>
+      Email:
+      <span id="profileEmail">
+      </span>
+     </p>
+     <p>
+      Mobile No:
+      <span id="profilePhone">
+      </span>
+     </p>
+     <h3 class="text-lg font-bold mb-2 mt-4">
+      Previous Analyses
+     </h3>
+     <ul class="list-disc pl-5" id="analysisList">
+      <li>
+       No analyses yet.
+      </li>
+     </ul>
+    </div>
+   </section>
+   <section class="mb-8 hidden" id="soil-detection">
+    <h2 class="text-xl font-bold mb-4">
+     Soil Detection
+    </h2>
+    <div class="bg-white p-6 rounded shadow-md">
+     <h3 class="text-lg font-bold mb-2">
+      Upload Soil Image
+     </h3>
+     <input class="mb-4" type="file"/>
+     <button class="bg-green-600 text-white px-4 py-2 rounded">
+      Analyze
+     </button>
+    </div>
+   </section>
+   <section class="mb-8 hidden" id="crop-detection">
+    <h2 class="text-xl font-bold mb-4">
+     Crop Detection
+    </h2>
+    <div class="bg-white p-6 rounded shadow-md">
+     <h3 class="text-lg font-bold mb-2">
+      Upload Crop Image
+     </h3>
+     <input class="mb-4" type="file"/>
+     <button class="bg-green-600 text-white px-4 py-2 rounded">
+      Analyze
+     </button>
+    </div>
+   </section>
+   <section class="mb-8 hidden" id="weather-detection">
+    <h2 class="text-xl font-bold mb-4">
+     Weather Detection
+    </h2>
+    <div class="bg-white p-6 rounded shadow-md">
+     <h3 class="text-lg font-bold mb-2">
+      Enter Location
+     </h3>
+     <input class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter your location" type="text"/>
+     <button class="bg-green-600 text-white px-4 py-2 rounded">
+      Check Weather
+     </button>
+    </div>
+   </section>
+  </main>
+  <footer class="bg-green-600 text-white p-4 text-center">
+   <p>
+    © 2023 AgroVision AI. All rights reserved.
+   </p>
+  </footer>
+  <script>
+   const menuButton = document.getElementById('menuButton');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sendOtpButton = document.getElementById('sendOtpButton');
+        const otpSection = document.getElementById('otpSection');
+        const loginForm = document.getElementById('loginForm');
+        const profileEmail = document.getElementById('profileEmail');
+        const profilePhone = document.getElementById('profilePhone');
+        const analysisList = document.getElementById('analysisList');
+
+        let userEmail = '';
+        let userPhone = '';
+        let analyses = [];
+        let generatedOtp = '';
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('overlay-open');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('sidebar-open');
+            overlay.classList.remove('overlay-open');
+        });
+
+        document.querySelectorAll('[data-target]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = e.target.getAttribute('data-target');
+                document.querySelectorAll('main > section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+                document.getElementById(target).classList.remove('hidden');
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.remove('overlay-open');
+            });
+        });
+
+        sendOtpButton.addEventListener('click', () => {
+            const phone = document.getElementById('phone').value;
+            fetch('/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ phone })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    generatedOtp = data.otp;
+                    otpSection.classList.remove('hidden');
+                } else {
+                    alert('Failed to send OTP');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredOtp = document.getElementById('otp').value;
+            if (enteredOtp === generatedOtp) {
+                userEmail = document.getElementById('email').value;
+                userPhone = document.getElementById('phone').value;
+                profileEmail.textContent = userEmail;
+                profilePhone.textContent = userPhone;
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('login').classList.add('hidden');
+            } else {
+                alert('Invalid OTP');
+            }
+        });
+
+        function addAnalysis(type, date) {
+            analyses.push({ type, date });
+            const listItem = document.createElement('li');
+            listItem.textContent = `${type} - ${date}`;
+            analysisList.appendChild(listItem);
+        }
+
+        // Example of adding an analysis
+        addAnalysis('Soil Analysis', '01/01/2023');
+        addAnalysis('Crop Health Check', '15/01/2023');
+        addAnalysis('Weather Analysis', '20/01/2023');
+  </script>
+ </body>
+</html>
